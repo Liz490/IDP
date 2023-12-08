@@ -9,7 +9,6 @@ from util.DataPlotter import *
 from sys import getsizeof
 import pandas as pd
 from keras.callbacks import ModelCheckpoint, Callback, EarlyStopping
-from keras.optimizers import Adam
 import tensorflow as tf
 from scipy.stats import pearsonr
 from model import KerasMultiSourceGCNModel
@@ -35,8 +34,8 @@ args = parser.parse_args()
 
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 
-LOG_DIR_BASE = "/nfs/home/students/l.schmierer/code/IDP/logs/training"
-LOG_DIR_BASE_TUNE = "/nfs/home/students/l.schmierer/code/IDP/logs/hp_tuning"
+LOG_DIR_BASE = "../logs/training"
+LOG_DIR_BASE_TUNE = "../logs/hp_tuning"
 
 if len(tf.config.list_physical_devices('GPU')) == 0:
     raise SystemError('GPU device not found')
@@ -68,7 +67,7 @@ Methylation_file = '../data/CCLE/genomic_methylation_561celllines_808genes_demap
 Drug_info_permutation = '../data/Randomised/drug_permutation.csv'
 Drug_info_randomisation = '../data/Randomised/drug_randomisation.csv'
 
-CHECKPOINT = "/nfs/home/students/l.schmierer/code/IDP/checkpoint/normal/best_DeepCDR_with_mut_with_gexp_with_methy_256_256_256_bn_relu_GAP_23.08-09:56.h5"
+CHECKPOINT = "./checkpoint/normal/best_DeepCDR_with_mut_with_gexp_with_methy_256_256_256_bn_relu_GAP_23.08-09:56.h5"
 
 DRUG_SHAPE = 75
 MUTATION_SHAPE = 34673
@@ -90,7 +89,7 @@ class ClearMemory(Callback):
 
 def ModelTraining(model, X_drug_data_train, X_mutation_data_train, X_gexpr_data_train, X_methylation_data_train,
                   Y_train, validation_data, leaveOut, logdir, params):
-    optimizer = Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+    optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999, decay=0.0, epsilon=None, amsgrad=False)
     model.compile(optimizer=optimizer, loss='mean_squared_error', metrics=['mse'])
 
     earlyStopping = EarlyStopping(monitor='val_loss', patience=params["patience"], verbose=1, restore_best_weights=True)
@@ -109,7 +108,7 @@ def ModelTraining(model, X_drug_data_train, X_mutation_data_train, X_gexpr_data_
     train_start = time.time()
     gpu_devices = tf.config.list_physical_devices('GPU')
     if gpu_devices:
-        tf.config.experimental.get_memory_usage('GPU:0')
+        tf.config.experimental.get_memory_info('GPU:0')['current']
     history = model.fit(x=[X_drug_feat_data_train, X_drug_adj_data_train, X_mutation_data_train, X_gexpr_data_train,
                            X_methylation_data_train], y=Y_train, batch_size=64, epochs=params["max_epoch"],
                         validation_data=validation_data,
@@ -269,6 +268,7 @@ def singleTrainingRun(data_train_idx, data_test_idx, drug_feature, mutation_feat
     log_dir = os.path.join(LOG_DIR_BASE, "debug" if params["debug_mode"] else "no_debug", params["leaveOut"],
                            "consider_ratio" if params["consider_ratio"] else "no ratio", f"fold_{foldIdx}",
                            datetime.now().strftime("%d.%m-%H:%M"))
+    print('log_dir: ', log_dir)
     # Extract features for training and test
     print("Extract features for training and test")
     X_drug_data_train, X_mutation_data_train, X_gexpr_data_train, X_methylation_data_train, Y_train, cancer_type_train_list = FeatureExtract(
@@ -399,6 +399,6 @@ if __name__ == '__main__':
         "nb_attn_head_methy": 8,
         "loss": "mse"
     }
-    path = "/nfs/home/students/l.schmierer/code/IDP/data/test_data.csv"
+    path = "../data/test_data.csv"
     runKFoldCV(params)
 

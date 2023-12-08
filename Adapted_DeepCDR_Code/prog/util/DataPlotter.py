@@ -118,14 +118,14 @@ def plot_var(path):
         # Remove axis
         ax.axis("off")
 
-        plt.savefig(f'/nfs/home/students/l.schmierer/code/IDP/plots/var_by_drug/{name}.png')
+        plt.savefig(f'../plots/var_by_drug/{name}.png')
 
         plt.show()
         plt.close()
 
-    sort_by_gt.to_csv(f"/nfs/home/students/l.schmierer/code/IDP/data/var_per_drug_sort_by_gt.csv", index=False)
-    sort_by_pred.to_csv(f"/nfs/home/students/l.schmierer/code/IDP/data/var_per_drug_sort_by_pred.csv", index=False)
-    sort_by_diff.to_csv(f"/nfs/home/students/l.schmierer/code/IDP/data/var_per_drug_sort_by_diff.csv", index=False)
+    sort_by_gt.to_csv(f"../data/var_per_drug_sort_by_gt.csv", index=False)
+    sort_by_pred.to_csv(f"../data/var_per_drug_sort_by_pred.csv", index=False)
+    sort_by_diff.to_csv(f"../data/var_per_drug_sort_by_diff.csv", index=False)
 
 def plotIC50DotPlot(df, group_attribute):
     """
@@ -175,7 +175,7 @@ def draw_single_dot_plot(current_frame, group_attribute, i):
         directory = "performance_per_tissue"
     else:
         directory = "performance_per_cellline"
-    plt.savefig(f'/nfs/home/students/l.schmierer/code/IDP/plots/{directory}/dot/sort_by_gt/fold_{i}.png')
+    plt.savefig(f'../plots/{directory}/dot/sort_by_gt/fold_{i}.png')
     plt.show()
     plt.close()
 
@@ -215,6 +215,6 @@ def plotIC50BoxPlot(df, group_attribute, sort_attribute):
             directory = "performance_per_tissue"
         else:
             directory = "performance_per_cellline"
-        plt.savefig(f'/nfs/home/students/l.schmierer/code/IDP/plots/{directory}/comparison/fold_{i - 5}.png')
+        plt.savefig(f'../plots/{directory}/comparison/fold_{i - 5}.png')
         plt.show()
         plt.close()

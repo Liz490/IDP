@@ -21,19 +21,15 @@ TCGA_label_set = ["ALL", "BLCA", "BRCA", "CESC", "DLBC", "LIHC", "LUAD",
                   "STAD", "THCA", 'COAD/READ']
 Max_atoms = 100
 
-Genomic_mutation_file_debug = '/nfs/home/students/l.schmierer/code/IDP/data/CCLE/Sorted/Genomic_mutation_file_sorted.csv'
-Gene_expression_file_debug = '/nfs/home/students/l.schmierer/code/IDP/data/CCLE/Sorted/Gene_expression_file_sorted.csv'
-Methylation_file_debug = '/nfs/home/students/l.schmierer/code/IDP/data/CCLE/Sorted/Methylation_file_sorted.csv'
+Genomic_mutation_file_debug = '../data/CCLE/Sorted/Genomic_mutation_file_sorted.csv'
+Gene_expression_file_debug = '../data/CCLE/Sorted/Gene_expression_file_sorted.csv'
+Methylation_file_debug = '../data/CCLE/Sorted/Methylation_file_sorted.csv'
 
-Genomic_mutation_file_random = '../../data/Randomised/Row/genomic_mutation.csv'
-Gene_expression_file_random = '../../data/Randomised/Row/genomic_expression.csv'
-Methylation_file_random = '../../data/Randomised/Row/genomic_methylation.csv'
+Genomic_mutation_file_random = '../data/Randomised/Row/genomic_mutation.csv'
+Gene_expression_file_random = '../data/Randomised/Row/genomic_expression.csv'
+Methylation_file_random = '../data/Randomised/Row/genomic_methylation.csv'
 
-# Genomic_mutation_file_random = '/nfs/home/students/l.schmierer/code/IDP/data/Randomised/Column/genomic_mutation.csv'
-# Gene_expression_file_random = '/nfs/home/students/l.schmierer/code/IDP/data/Randomised/Column/genomic_expression.csv'
-# Methylation_file_random = '/nfs/home/students/l.schmierer/code/IDP/data/Randomised/Column/genomic_methylation.csv'
-
-Cancer_response_exp_file = '/nfs/home/students/l.schmierer/code/IDP/data/CCLE/GDSC_IC50.csv'
+Cancer_response_exp_file = '../data/CCLE/GDSC_IC50.csv'
 MAX_ROWS_DEBUG = 50
 
 ##############################################################################
@@ -275,8 +271,8 @@ def getSplits(params, data_idx):
             n_splits=params["k"])
         splits = kf.split(data_idx, groups=groups.get(params["leaveOut"]))
     if params["save_split"]:
-        path_train = f'/nfs/home/students/l.schmierer/code/IDP/data/FixedSplits/{params["leaveOut"]}_train.csv'
-        path_test = f'/nfs/home/students/l.schmierer/code/IDP/data/FixedSplits/{params["leaveOut"]}_test.csv'
+        path_train = f'../data/FixedSplits/{params["leaveOut"]}_train.csv'
+        path_test = f'../data/FixedSplits/{params["leaveOut"]}_test.csv'
         for split in splits:
             data_train_idx, data_test_idx = [data_idx[idx] for idx in split[0]], [data_idx[idx] for idx in split[1]]
             df_train = pd.DataFrame(data_train_idx, columns=["cellline", "drug", "ic50", "tissue"])
