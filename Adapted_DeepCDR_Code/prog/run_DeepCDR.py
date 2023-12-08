@@ -357,13 +357,18 @@ def runKFoldCV(params):
 
     date_time = datetime.now().strftime("%d.%m.%Y-%H:%M")
     if params["debug_mode"]:
+        if not os.path.isdir("Result kfv/Regression/debug/"):
+            os.makedirs("Result kfv/Regression/debug/")
         fp = open(fr'Result kfv/Regression/debug/{params["leaveOut"]}_{date_time}', 'w')
     else:
+        if not os.path.isdir("Result kfv/Regression/no_debug/"):
+            os.makedirs("Result kfv/Regression/no_debug/")
         fp = open(
             fr'Result kfv/Regression/no_debug/{params["leaveOut"]}_ratio_{params["consider_ratio"]}_mul_{params["mul"]}_{date_time}',
             'w')
     for idx, element in enumerate(validationScores):
-        fp.write(f"Model {idx}, validation Scores (Pearson's) : {element[0]}, stopped after epoch: {element[1]}, best epoch: {element[2]} \n\n")
+        fp.write(
+            f"Model {idx}, validation Scores (Pearson's) : {element[0]}, stopped after epoch: {element[1]}, best epoch: {element[2]} \n\n")
     fp.close()
     print(
         f'The validation scores for the {params["k"]} folds are (mse, early stopping, best epoch): {validationScores}')
